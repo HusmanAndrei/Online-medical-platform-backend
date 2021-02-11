@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoctorController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.controllers</a> &gt; <span class="el_source">DoctorController.java</span></div><h1>DoctorController.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import ro.tuc.ds2020.dtos.*;
+import ro.tuc.ds2020.dtos.view.DoctorViewDTO;
+import ro.tuc.ds2020.dtos.view.MedicationViewDTO;
+import ro.tuc.ds2020.entities.Patient;
+import ro.tuc.ds2020.entities.User;
+import ro.tuc.ds2020.services.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@CrossOrigin
+@RequestMapping(value = &quot;/doctor&quot;)
+
+public class DoctorController {
+
+    private final DoctorService doctorService;
+    private final PatientService patientService;
+    private final CaregiverService caregiverService;
+    private final MedicationService medicationService;
+    private final MedicalPlanService medicalPlanService;
+
+    private final UserService userService;
+
+    @Autowired
+<span class="fc" id="L30">    public DoctorController(DoctorService doctorService, PatientService patientService, CaregiverService caregiverService, MedicationService medicationService, MedicalPlanService medicalPlanService, UserService userService){</span>
+<span class="fc" id="L31">        this.doctorService = doctorService;</span>
+<span class="fc" id="L32">        this.patientService = patientService;</span>
+<span class="fc" id="L33">        this.caregiverService = caregiverService;</span>
+<span class="fc" id="L34">        this.medicationService = medicationService;</span>
+<span class="fc" id="L35">        this.medicalPlanService = medicalPlanService;</span>
+<span class="fc" id="L36">        this.userService = userService;</span>
+
+<span class="fc" id="L38">    }</span>
+
+    @RequestMapping(value=&quot;/{id}&quot;, method = RequestMethod.GET)
+    public DoctorViewDTO findById(@PathVariable(&quot;id&quot;) Long id){
+<span class="nc" id="L42">        return doctorService.findDoctorById(id);</span>
+    }
+
+    @RequestMapping(value=&quot;/all&quot;, method = RequestMethod.GET)
+    public List&lt;DoctorViewDTO&gt; findAll(){
+<span class="nc" id="L47">        return doctorService.findAll();</span>
+    }
+
+    @RequestMapping(value=&quot;/insert&quot;, method = RequestMethod.POST)
+    public Long insert(@RequestBody DoctorDTO doctorDTO) {
+<span class="nc" id="L52">        return doctorService.insert(doctorDTO);</span>
+    }
+
+
+    /***********************
+     * CRUD on patients
+     ***********************/
+
+    @RequestMapping(value = &quot;/patient/{id}&quot;, method = RequestMethod.GET)
+    public PatientDTO findPatientById(@PathVariable(&quot;id&quot;) Long id){
+<span class="nc" id="L62">        return patientService.findPatientById(id);</span>
+    }
+
+    @RequestMapping(value = &quot;/patients&quot;, method = RequestMethod.GET)
+<span class="nc" id="L66">    public List&lt;PatientDTO&gt; findAllPatients() { return patientService.findAllPatients(); }</span>
+
+    @RequestMapping(value = &quot;/patient&quot;, method = RequestMethod.POST)
+<span class="nc" id="L69">    public Long insertPatient(@RequestBody PatientDTO patientDTO) { return patientService.save(patientDTO).getId(); }</span>
+
+    @RequestMapping(value = &quot;/patient/{id}&quot;, method = RequestMethod.PUT)
+<span class="nc" id="L72">    public Long updatePatient(@PathVariable(&quot;id&quot;) Long id, @RequestBody PatientDTO patientDTO) { return patientService.update(id, patientDTO); }</span>
+
+    @RequestMapping(value = &quot;/patient/{id}&quot;, method = RequestMethod.DELETE)
+<span class="nc" id="L75">    public void deletePatient(@PathVariable(&quot;id&quot;) Long id) { patientService.delete(id); }</span>
+
+    @RequestMapping(value = &quot;/caregiver/{id}&quot;, method = RequestMethod.GET)
+<span class="nc" id="L78">    public CaregiverDTO findCaregiverById(@PathVariable(&quot;id&quot;) Long id) { return caregiverService.findCaregiverById(id); }</span>
+
+    @RequestMapping(value = &quot;/caregivers&quot;, method = RequestMethod.GET)
+<span class="nc" id="L81">    public List&lt;CaregiverDTO&gt; findAllCaregivers() { return caregiverService.findAllCaregivers(); }</span>
+
+    @RequestMapping(value = &quot;/caregiver&quot;, method = RequestMethod.POST)
+<span class="nc" id="L84">    public Long insertCaregiver(@RequestBody CaregiverDTO caregiverDTO) { return caregiverService.insert(caregiverDTO); }</span>
+
+    @RequestMapping(value = &quot;/caregiver/{id}&quot;, method = RequestMethod.PUT)
+<span class="nc" id="L87">    public Long updateCaregiver(@PathVariable(&quot;id&quot;) Long id, @RequestBody CaregiverDTO caregiverDTO) { return caregiverService.update(id, caregiverDTO); }</span>
+
+    @RequestMapping(value = &quot;/caregiver/{id}&quot;, method = RequestMethod.DELETE)
+<span class="nc" id="L90">    public Long deleteCaregiver(@PathVariable(&quot;id&quot;) Long id) { caregiverService.delete(id); return id; }</span>
+
+
+
+    @PostMapping(&quot;login&quot;)
+    public User login(@Valid @RequestBody LoginDTO loginDTO) {
+<span class="nc" id="L96">        return userService.login(loginDTO.getUsername(), loginDTO.getPassword());</span>
+    }
+
+
+//    @PostMapping(&quot;login&quot;)
+//    public User login(@Valid @RequestBody final DoctorDTO doctorLoginRequestDTO) {
+//        return userService.login(doctorLoginRequestDTO);
+//    }
+//
+//    @PostMapping(&quot;login&quot;)
+//    public User login(@Valid @RequestBody final CaregiverDTO caregiverLoginRequestDTO) {
+//        return userService.login(caregiverLoginRequestDTO);
+//    }
+
+
+    /***********************
+     * CRUD on medication
+     ***********************/
+
+    @RequestMapping(value = &quot;/medication/{id}&quot;, method = RequestMethod.GET)
+<span class="nc" id="L116">    public MedicationViewDTO findMedicationById(@PathVariable(&quot;id&quot;) Long id) { return medicationService.findMedicationById(id); }</span>
+
+    @RequestMapping(value = &quot;/medications&quot;, method = RequestMethod.GET)
+<span class="nc" id="L119">    public List&lt;MedicationViewDTO&gt; findAllMedications() { return medicationService.findAllMedications(); }</span>
+
+    @RequestMapping(value = &quot;/medication&quot;, method = RequestMethod.POST)
+<span class="nc" id="L122">    public Long insertMedication(@RequestBody MedicationDTO medicationDTO) { return medicationService.insert(medicationDTO); }</span>
+
+    @RequestMapping(value = &quot;/medication/{id}&quot;, method = RequestMethod.PUT)
+<span class="nc" id="L125">    public Long updateMedication(@PathVariable(&quot;id&quot;) Long id, @RequestBody MedicationDTO medicationDTO) { return medicationService.update(id, medicationDTO); }</span>
+
+    @RequestMapping(value = &quot;/medication/{id}&quot;, method = RequestMethod.DELETE)
+<span class="nc" id="L128">    public void deleteMedication(@PathVariable(&quot;id&quot;) Long id) { medicationService.delete(id); }</span>
+
+    /***********************
+     * Create Medical Plan
+     ***********************/
+
+    @RequestMapping(value = &quot;/createMedicalPlan&quot;, method = RequestMethod.POST)
+<span class="nc" id="L135">    public Long createMedicalPlan(@RequestBody MedicalPlanDTO medicalPlanDTO) { return medicalPlanService.insertMedicalPlan(medicalPlanDTO); }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

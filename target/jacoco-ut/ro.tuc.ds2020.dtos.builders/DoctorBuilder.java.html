@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoctorBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.dtos.builders</a> &gt; <span class="el_source">DoctorBuilder.java</span></div><h1>DoctorBuilder.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.dtos.builders;
+
+import ro.tuc.ds2020.dtos.DoctorDTO;
+import ro.tuc.ds2020.entities.Doctor;
+
+<span class="nc" id="L6">public class DoctorBuilder {</span>
+
+    public static DoctorDTO generateDTOFromEntity(Doctor doctor){
+<span class="nc" id="L9">        return new DoctorDTO(</span>
+<span class="nc" id="L10">                doctor.getId(),</span>
+<span class="nc" id="L11">                doctor.getName(),</span>
+<span class="nc" id="L12">                doctor.getUsername(),</span>
+<span class="nc" id="L13">                doctor.getPassword(),</span>
+<span class="nc" id="L14">                doctor.getBirth_date(),</span>
+<span class="nc" id="L15">                doctor.getGender(),</span>
+<span class="nc" id="L16">                doctor.getAddress()</span>
+        );
+    }
+
+    public static Doctor generateEntityFromDTO(DoctorDTO doctorDTO){
+<span class="nc" id="L21">        return new Doctor(</span>
+<span class="nc" id="L22">                doctorDTO.getName(),</span>
+<span class="nc" id="L23">                doctorDTO.getUsername(),</span>
+<span class="nc" id="L24">                doctorDTO.getPassword(),</span>
+<span class="nc" id="L25">                doctorDTO.getBirthDate(),</span>
+<span class="nc" id="L26">                doctorDTO.getGender(),</span>
+<span class="nc" id="L27">                doctorDTO.getAddress()</span>
+        );
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

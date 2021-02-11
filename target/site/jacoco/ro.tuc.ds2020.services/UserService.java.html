@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.services</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.services;
+
+import org.springframework.stereotype.Service;
+import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
+import ro.tuc.ds2020.dtos.CaregiverDTO;
+import ro.tuc.ds2020.dtos.DoctorDTO;
+import ro.tuc.ds2020.dtos.PatientDTO;
+import ro.tuc.ds2020.dtos.UserDTO;
+import ro.tuc.ds2020.entities.Caregiver;
+import ro.tuc.ds2020.entities.Doctor;
+import ro.tuc.ds2020.entities.Patient;
+import ro.tuc.ds2020.entities.User;
+import ro.tuc.ds2020.repositories.CaregiverRepository;
+import ro.tuc.ds2020.repositories.DoctorRepository;
+import ro.tuc.ds2020.repositories.PatientRepository;
+import ro.tuc.ds2020.repositories.UserRepository;
+
+import java.util.Optional;
+
+@Service
+public final class UserService {
+
+    private final UserRepository userRepository;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final CaregiverRepository caregiverRepository;
+
+
+<span class="fc" id="L29">    public UserService(UserRepository userRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, CaregiverRepository caregiverRepository) {</span>
+<span class="fc" id="L30">        this.userRepository = userRepository;</span>
+<span class="fc" id="L31">        this.patientRepository = patientRepository;</span>
+<span class="fc" id="L32">        this.doctorRepository = doctorRepository;</span>
+<span class="fc" id="L33">        this.caregiverRepository = caregiverRepository;</span>
+
+<span class="fc" id="L35">    }</span>
+
+//    public User login(final UserDTO userLoginRequestDto) {
+//        final Optional&lt;User&gt; userOptional = userRepository
+//                .findByUsername(userLoginRequestDto.getUsername())
+//                .filter(user -&gt; userLoginRequestDto.getPassword().equals(user.getPassword()));
+//
+//        if (userOptional.isPresent()) {
+//            return userOptional.get();
+//        } else {
+//            throw new ResourceNotFoundException(&quot;alabala&quot;);
+//        }
+//    }
+
+
+    public Patient login(final PatientDTO patientLoginRequestDTO) {
+<span class="nc" id="L51">        final Optional&lt;Patient&gt; patientOptional = patientRepository</span>
+<span class="nc" id="L52">                .findByUsername(patientLoginRequestDTO.getUsername())</span>
+<span class="nc" id="L53">                .filter(user -&gt; patientLoginRequestDTO.getPassword().equals(user.getPassword()));</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (patientOptional.isPresent()) {</span>
+<span class="nc" id="L56">            return patientOptional.get();</span>
+        } else {
+<span class="nc" id="L58">            throw new ResourceNotFoundException(&quot;alabala&quot;);</span>
+        }
+    }
+
+
+    public Doctor login(final DoctorDTO doctorLoginRequestDTO) {
+<span class="nc" id="L64">        final Optional&lt;Doctor&gt; doctorOptional = doctorRepository</span>
+<span class="nc" id="L65">                .findByUsername(doctorLoginRequestDTO.getUsername())</span>
+<span class="nc" id="L66">                .filter(user -&gt; doctorLoginRequestDTO.getPassword().equals(user.getPassword()));</span>
+
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (doctorOptional.isPresent()) {</span>
+<span class="nc" id="L69">        return doctorOptional.get();</span>
+        } else {
+<span class="nc" id="L71">            throw new ResourceNotFoundException(&quot;alabala&quot;);</span>
+        }
+    }
+
+    public Caregiver login(final CaregiverDTO caregiverLoginRequestDTO) {
+<span class="nc" id="L76">        final Optional&lt;Caregiver&gt; caregiverOptional = caregiverRepository</span>
+<span class="nc" id="L77">                .findByUsername(caregiverLoginRequestDTO.getUsername())</span>
+<span class="nc" id="L78">                .filter(user -&gt; caregiverLoginRequestDTO.getPassword().equals(user.getPassword()));</span>
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (caregiverOptional.isPresent()) {</span>
+<span class="nc" id="L81">        return caregiverOptional.get();</span>
+        } else {
+<span class="nc" id="L83">            throw new ResourceNotFoundException(&quot;alabala&quot;);</span>
+        }
+    }
+
+    public User login(final String username, final String password) {
+<span class="nc" id="L88">        final Optional&lt;Caregiver&gt; caregiverOptional = caregiverRepository</span>
+<span class="nc" id="L89">                .findByUsername(username)</span>
+<span class="nc" id="L90">                .filter(user -&gt; password.equals(user.getPassword()));</span>
+<span class="nc" id="L91">        final Optional&lt;Doctor&gt; doctorOptional = doctorRepository</span>
+<span class="nc" id="L92">                .findByUsername(username)</span>
+<span class="nc" id="L93">                .filter(user -&gt; password.equals(user.getPassword()));</span>
+<span class="nc" id="L94">        final Optional&lt;Patient&gt; patientOptional = patientRepository</span>
+<span class="nc" id="L95">                .findByUsername(username)</span>
+<span class="nc" id="L96">                .filter(user -&gt; password.equals(user.getPassword()));</span>
+
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (patientOptional.isPresent()) {</span>
+<span class="nc" id="L99">            return patientOptional.get();</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        } else if (caregiverOptional.isPresent()){</span>
+<span class="nc" id="L101">            return caregiverOptional.get();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        } else if (doctorOptional.isPresent()) {</span>
+<span class="nc" id="L103">            return doctorOptional.get();</span>
+        } else {
+<span class="nc" id="L105">            throw new ResourceNotFoundException(&quot;alabala&quot;);</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

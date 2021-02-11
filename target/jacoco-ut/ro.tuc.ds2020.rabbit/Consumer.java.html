@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Consumer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.rabbit</a> &gt; <span class="el_source">Consumer.java</span></div><h1>Consumer.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.rabbit;
+
+import ro.tuc.ds2020.entities.Activity;
+import com.google.gson.Gson;
+import com.rabbitmq.client.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import ro.tuc.ds2020.services.util.IActivityService;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeoutException;
+@Component
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
+public class Consumer {
+<span class="fc" id="L20">    private final static Gson gson = new Gson();</span>
+    private final IActivityService iActivityService;
+
+    @Bean
+    public void Consumer () throws IOException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException, TimeoutException {
+
+<span class="fc" id="L26">        ConnectionFactory factory = new ConnectionFactory();</span>
+<span class="fc" id="L27">        String uri = &quot;amqps://ujrahjwg:feP0wmEVfFj9ysqkmh3jIcqR_5ecgReF@sparrow.rmq.cloudamqp.com/ujrahjwg&quot;;</span>
+<span class="fc" id="L28">        factory.setUri(uri);</span>
+
+
+<span class="fc" id="L31">        factory.setConnectionTimeout(30000);</span>
+<span class="fc" id="L32">        Connection connection = factory.newConnection();</span>
+<span class="fc" id="L33">        Channel channel = connection.createChannel();</span>
+<span class="fc" id="L34">        channel.queueDeclare(&quot;activities&quot;, false, false, false, null);</span>
+<span class="fc" id="L35">        System.out.println(&quot; [*] Waiting for messages&quot;);</span>
+<span class="fc" id="L36">        com.rabbitmq.client.Consumer consumer = new DefaultConsumer(channel) {</span>
+
+
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+<span class="nc" id="L41">                String message = new String(body);</span>
+<span class="nc" id="L42">                System.out.println(&quot;Received: &quot; + message);</span>
+<span class="nc" id="L43">                String patientActivity = new String(body, StandardCharsets.UTF_8);</span>
+<span class="nc" id="L44">                Activity activity = gson.fromJson(patientActivity, Activity.class);</span>
+<span class="nc" id="L45">                iActivityService.processActivity(activity);</span>
+<span class="nc" id="L46">            }</span>
+
+            @Override
+            public void handleConsumeOk(String consumerTag) {
+<span class="fc" id="L50">                System.out.println(&quot;Handled consumer OK!&quot;);</span>
+<span class="fc" id="L51">            }</span>
+        };
+<span class="fc" id="L53">        channel.basicConsume(&quot;activities&quot;, true, consumer);</span>
+<span class="fc" id="L54">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

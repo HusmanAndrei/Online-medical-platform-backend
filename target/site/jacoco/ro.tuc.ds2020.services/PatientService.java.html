@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.services</a> &gt; <span class="el_source">PatientService.java</span></div><h1>PatientService.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
+import ro.tuc.ds2020.dtos.PatientDTO;
+import ro.tuc.ds2020.dtos.builders.PatientBuilder;
+import ro.tuc.ds2020.entities.Caregiver;
+import ro.tuc.ds2020.entities.Patient;
+import ro.tuc.ds2020.entities.Person;
+import ro.tuc.ds2020.repositories.CaregiverRepository;
+import ro.tuc.ds2020.repositories.PatientRepository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
+
+@Service
+public class PatientService {
+
+    private  final PatientRepository patientRepository;
+    private final CaregiverRepository caregiverRepository;
+
+
+    @Autowired
+<span class="fc" id="L29">    public PatientService(PatientRepository patientRepository, CaregiverRepository caregiverRepository) {</span>
+<span class="fc" id="L30">        this.patientRepository = patientRepository;</span>
+<span class="fc" id="L31">        this.caregiverRepository = caregiverRepository;</span>
+
+<span class="fc" id="L33">    }</span>
+
+    public PatientDTO findPatientById(Long id) {
+<span class="nc" id="L36">        Optional&lt;Patient&gt; patient = patientRepository.findById(id);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if(!patient.isPresent()){</span>
+<span class="nc" id="L38">            throw new ResourceNotFoundException(String.format(&quot;%s not found with %s : '%s'&quot;, id));</span>
+        }
+<span class="nc" id="L40">        return PatientBuilder.generateDTOFromEntity(patient.get());</span>
+    }
+
+    public List&lt;PatientDTO&gt; findAllPatients(){
+<span class="nc" id="L44">        List&lt;Patient&gt; patients = patientRepository.findAll();</span>
+<span class="nc" id="L45">        return patients.stream()</span>
+<span class="nc" id="L46">                .map(PatientBuilder::generateDTOFromEntity)</span>
+<span class="nc" id="L47">                .collect(Collectors.toList());</span>
+    }
+
+    public Long insert(PatientDTO patientDTO){
+        //TODO validator
+<span class="nc" id="L52">        return patientRepository</span>
+<span class="nc" id="L53">                .save(PatientBuilder.generateEntityFromDTO(patientDTO))</span>
+<span class="nc" id="L54">                .getId();</span>
+    }
+    @Transactional
+    public Patient save(PatientDTO patientDto) {
+<span class="nc" id="L58">        Patient patient = PatientBuilder.generateEntityFromDTO(patientDto);</span>
+        Optional&lt;Caregiver&gt; caregiverOptional;
+
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (nonNull(patientDto.getCaregiverId())) {</span>
+<span class="nc" id="L62">            caregiverOptional = caregiverRepository.findById(patientDto.getCaregiverId());</span>
+<span class="nc" id="L63">            caregiverOptional.ifPresent(patient::setCaregiver);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            if (patient.getCaregiver() == null) {</span>
+<span class="nc" id="L65">                throw new ResourceNotFoundException(&quot;Caregiver&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L69">        return patientRepository.save(patient);</span>
+    }
+    @Transactional
+    public Long update(Long id, PatientDTO patientDTO){
+<span class="nc" id="L73">        Optional&lt;Patient&gt; doctor = patientRepository.findById(id);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if(!doctor.isPresent()){</span>
+<span class="nc" id="L75">            throw new ResourceNotFoundException(String.format(&quot;%s not found with %s : '%s'&quot;, patientDTO.getId()));</span>
+        }
+<span class="nc" id="L77">        this.patientRepository.deleteById(id);</span>
+        //TODO validator
+<span class="nc" id="L79">        Patient edited = PatientBuilder.generateEntityFromDTO(patientDTO);</span>
+<span class="nc" id="L80">        Long caregiverId = patientDTO.getCaregiverId();</span>
+<span class="nc" id="L81">        Optional&lt;Caregiver&gt; caregiver = caregiverRepository.findById(caregiverId);</span>
+<span class="nc" id="L82">        Caregiver actualCaregiver = null;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (caregiver.isPresent()){</span>
+<span class="nc" id="L84">            actualCaregiver = caregiver.get();</span>
+        }
+<span class="nc" id="L86">        edited.setCaregiver(actualCaregiver);</span>
+<span class="nc" id="L87">        return patientRepository</span>
+<span class="nc" id="L88">                .save(edited)</span>
+<span class="nc" id="L89">                .getId();</span>
+    }
+
+    public void delete(Long id) {
+<span class="nc" id="L93">        this.patientRepository.deleteById(id);</span>
+<span class="nc" id="L94">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

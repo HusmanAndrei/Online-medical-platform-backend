@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Patient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.entities</a> &gt; <span class="el_source">Patient.java</span></div><h1>Patient.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ro.tuc.ds2020.entities.util.Type;
+
+import javax.persistence.*;
+
+@Entity
+@Getter
+<span class="nc" id="L13">@Setter</span>
+<span class="fc" id="L14">@NoArgsConstructor</span>
+<span class="nc" id="L15">@AllArgsConstructor</span>
+public class Patient extends User{
+
+    @Column
+<span class="nc" id="L19">    private String medicalRecord;</span>
+
+    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = &quot;medical_plan_id&quot;, referencedColumnName = &quot;id&quot;)
+<span class="nc" id="L23">    private MedicalPlan medicalPlan;</span>
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+//    @JoinColumn(name = &quot;caregiver_id&quot;, referencedColumnName = &quot;id&quot;)
+<span class="nc" id="L27">    private Caregiver caregiver;</span>
+
+    public Patient(String name, String birthDate, Character gender, String address, String medicalRecord){
+<span class="nc" id="L30">        super(name, birthDate, gender, address);</span>
+<span class="nc" id="L31">        this.medicalRecord = medicalRecord;</span>
+
+<span class="nc" id="L33">    }</span>
+
+    public Patient(String name, String username, String password, String birth_date, Character gender, String address, String medicalRecord) {
+<span class="nc" id="L36">        super(name, username, password,Type.PATIENT, birth_date, gender, address);</span>
+<span class="nc" id="L37">        this.medicalRecord = medicalRecord;</span>
+<span class="nc" id="L38">    }</span>
+
+    public Patient(String name, String username, String password, String birthDate, Character gender, String address, String medicalRecord, MedicalPlan medicalPlan, Caregiver caregiver
+    ) {
+<span class="nc" id="L42">        super(name, username, password, Type.PATIENT, birthDate, gender, address);</span>
+<span class="nc" id="L43">        this.medicalRecord = medicalRecord;</span>
+<span class="nc" id="L44">        this.medicalPlan = medicalPlan;</span>
+<span class="nc" id="L45">        this.caregiver = caregiver;</span>
+<span class="nc" id="L46">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

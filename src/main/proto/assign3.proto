@@ -1,0 +1,42 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package grpc;
+
+
+service PillboxService {
+  rpc getMedicationPlans (MedicationPlanRequest) returns (MedicationPlanResponse) {}
+  rpc sendPatientAction (GRPCMedicationAction) returns (EmptyResponse) {}
+}
+
+message MedicationPlanRequest {
+  int64 patientId = 1;
+  string currentDate = 2;
+}
+
+message MedicationPlanResponse {
+  repeated GRPCMedicationPlan medicationPlans = 1;
+}
+
+message GRPCMedicationPlan {
+  int64 id = 1;
+  int64 patientId = 2;
+  repeated GRPCMedicationToMedicationPlan gRPCMedicationToMedicationPlan = 3;
+  string startDate = 4;
+  string endDate = 5;
+}
+
+message GRPCMedicationToMedicationPlan {
+  int64 id = 1;
+  string medicationName = 2;
+  string intakeInterval = 3;
+}
+
+message GRPCMedicationAction {
+  int64 medicationPlanId = 1;
+  string medicationName = 2;
+  string time = 3;
+  bool taken = 4;
+}
+
+message EmptyResponse {
+}

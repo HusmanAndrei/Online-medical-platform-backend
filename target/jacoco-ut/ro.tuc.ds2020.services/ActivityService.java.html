@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ActivityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.services</a> &gt; <span class="el_source">ActivityService.java</span></div><h1>ActivityService.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.services;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ro.tuc.ds2020.entities.Activity;
+import ro.tuc.ds2020.repositories.ActivityRepository;
+import ro.tuc.ds2020.services.util.IActivityService;
+
+import javax.transaction.Transactional;
+
+@Service
+<span class="fc" id="L12">@RequiredArgsConstructor</span>
+@Transactional
+public class ActivityService implements IActivityService {
+<span class="fc" id="L15">    private final long MILLISHOUR = 3600000;</span>
+<span class="fc" id="L16">    private final String SLEEP = &quot;Sleeping&quot;;</span>
+<span class="fc" id="L17">    private final String LEAVE = &quot;Leaving&quot;;</span>
+<span class="fc" id="L18">    private final String TOILET = &quot;Toileting&quot;;</span>
+
+    private final ActivityRepository activityRepository;
+
+    @Override
+    public void processActivity(Activity activity) {
+<span class="nc" id="L24">        activityRepository.save(activity);</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        if (badActivity(activity)) {</span>
+<span class="nc" id="L26">            System.out.println(activity.toString());</span>
+        }
+<span class="nc" id="L28">    }</span>
+
+    private boolean badActivity(Activity activity) {
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (TOILET.equals(activity.getActivity())) {</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">            boolean toilet = activity.getTime_end() - activity.getTime_start() &gt; 0.5 * MILLISHOUR;</span>
+<span class="nc" id="L33">            return toilet;</span>
+        }
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (LEAVE.equals(activity.getActivity())) {</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            boolean leave = activity.getTime_end() - activity.getTime_start() &gt; 5 * MILLISHOUR;</span>
+<span class="nc" id="L37">            return leave;</span>
+        }
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (SLEEP.equals(activity.getActivity())) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            boolean sleep = activity.getTime_end() - activity.getTime_start() &gt; 7 * MILLISHOUR;</span>
+<span class="nc" id="L41">            return sleep;</span>
+        }
+<span class="nc" id="L43">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

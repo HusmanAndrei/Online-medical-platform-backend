@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Medication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ds-2020</a> &gt; <a href="index.source.html" class="el_package">ro.tuc.ds2020.entities</a> &gt; <span class="el_source">Medication.java</span></div><h1>Medication.java</h1><pre class="source lang-java linenums">package ro.tuc.ds2020.entities;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+<span class="nc" id="L13">@Setter</span>
+<span class="fc" id="L14">@NoArgsConstructor</span>
+public class Medication {
+
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.AUTO,
+            generator = &quot;native&quot;
+    )
+    @GenericGenerator(
+            name = &quot;native&quot;,
+            strategy = &quot;native&quot;
+    )
+<span class="nc" id="L26">    private Long id;</span>
+
+    @Column
+<span class="nc" id="L29">    private String name;</span>
+
+    @Column
+<span class="nc" id="L32">    private String sideEffects;</span>
+
+    @Column
+<span class="nc" id="L35">    private String dosage;</span>
+
+<span class="pc" id="L37">    @ManyToMany(mappedBy = &quot;medications&quot;)</span>
+<span class="nc" id="L38">    private List&lt;MedicalPlan&gt; medicalPlans = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L40">    public Medication(String name, String sideEffects, String dosage) {</span>
+<span class="nc" id="L41">        this.name = name;</span>
+<span class="nc" id="L42">        this.sideEffects = sideEffects;</span>
+<span class="nc" id="L43">        this.dosage = dosage;</span>
+<span class="nc" id="L44">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
